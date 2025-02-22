@@ -1,0 +1,68 @@
+{
+  "about": "About Us",
+  "services": "Services",
+  "trips": "Trips",
+  "contact": "Contact",
+  "company_name": "FAXR TRAVEL",
+  "company_type": "Limited Liability Company",
+  "about_text": "FAXR TRAVEL LLC is a leading travel agency in Uzbekistan, providing unforgettable travel experiences to our clients.",
+  "tour_package_title": "Tour Package Includes",
+  "all": "See All",
+  "banner": {
+    "explore": "Explore",
+    "discover": "Discover Amazing Places",
+    "book": "Book Your Trip",
+    "days": "day"
+  },
+  "tour_package": {
+    "flight": "Flight Tickets",
+    "hotel": "Hotel Services",
+    "food": "Meals - According to Concept",
+    "transfer": "Pick-up and Drop-off Service",
+    "guides": "Professional Guides",
+    "support": "24/7 Support"
+  },
+  "achievements": {
+    "official": "Official LLC",
+    "clients": "Satisfied Clients",
+    "destinations": "Travel Destinations",
+    "service": "24/7 Service"
+  },
+  "contact_title": "Contact Us",
+  "phone": "+998 95 312 02 02",
+  "address": "Tashkent city, Yakkasaray district, Yakkasaray MFY, Bog'ibo'ston street, 147",
+  "social_media": "Social Media",
+  "testimonials": [
+    {
+      "text": "Excellent service! Our trip to Dubai was unforgettable.",
+      "author": "Aziza K.",
+      "role": "Client"
+    },
+    {
+      "text": "Professional team and attention to every detail. Highly recommend!",
+      "author": "Rustam M.",
+      "role": "Business Traveler"
+    },
+    {
+      "text": "Traveling to Turkey with FAXR TRAVEL was a dream, now a wonderful memory!",
+      "author": "Dilnoza S.",
+      "role": "Family Traveler"
+    }
+  ],
+  "footer": {
+    "address": "123 Tashkent city, Uzbekistan",
+    "phone": "+998 90 123 45 67",
+    "navigation": "Navigation",
+    "about": "About Us",
+    "tours": "Tours",
+    "services": "Services",
+    "contact": "Contact",
+    "legal": "Legal",
+    "terms": "Terms of Use",
+    "privacy": "Privacy Policy",
+    "customer_agreement": "Customer Agreement",
+    "social": "Social Media",
+    "copyright": "All rights reserved."
+  }
+
+}

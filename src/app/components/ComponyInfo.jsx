@@ -1,64 +1,51 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { useInView } from "react-intersection-observer";
 import {
   FaPhoneAlt,
   FaInstagram,
   FaTelegram,
   FaPlane,
   FaHotel,
-  FaUtensils,
+  FaCoffee,
   FaCar,
   FaMapMarkerAlt,
   FaStar,
-  FaGlobeAmericas,
+  FaGlobeAsia,
   FaQuoteLeft,
-  FaAward,
-  FaHandshake,
+  FaUsers,
   FaClock,
-  FaBuilding,
 } from "react-icons/fa";
+import { FaBuildingColumns } from "react-icons/fa6";
 import { motion, useAnimation } from "framer-motion";
+import CountUp from "react-countup";
 
 const CompanyInfo = () => {
+  const { t } = useTranslation();
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
-  const controls = useAnimation();
 
-  const testimonials = [
-    {
-      text: "Ajoyib xizmat! Dubaiga qilgan sayohatimiz unutilmas bo'ldi.",
-      author: "Aziza K.",
-      role: "Mijoz",
-    },
-    {
-      text: "Professional jamoa va har bir detalga e'tibor. Juda tavsiya qilaman!",
-      author: "Rustam M.",
-      role: "Biznes Sayohatchi",
-    },
-    {
-      text: "FAXR TRAVEL bilan Turkiyaga sayohat qilish orzu edi, endi esa ajoyib xotira!",
-      author: "Dilnoza S.",
-      role: "Oilaviy Sayohatchi",
-    },
-  ];
+  const testimonials = t("testimonials", { returnObjects: true }) || [];
+  if (!Array.isArray(testimonials)) {
+    console.error("Testimonials is not an array:", testimonials);
+  }
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, []);
+    if (testimonials.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+      }, 2000);
+      return () => clearInterval(interval);
+    }
+  }, [testimonials.length]);
 
   const containerVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: {
-        duration: 0.8,
-        staggerChildren: 0.3,
-      },
+      transition: { duration: 0.8, staggerChildren: 0.3 },
     },
   };
 
@@ -68,25 +55,54 @@ const CompanyInfo = () => {
   };
 
   const achievements = [
-    { icon: FaBuilding, text: "Rasmiy MCHJ", value: "100%" },
-    { icon: FaHandshake, text: "Mamnun mijozlar", value: "1000+" },
-    { icon: FaGlobeAmericas, text: "Sayohat yo'nalishlari", value: "50+" },
-    { icon: FaClock, text: "24/7 xizmat", value: "24/7" },
+    {
+      icon: FaBuildingColumns,
+      text: t("achievements.official"),
+      value: 100,
+      suffix: "%",
+    },
+    {
+      icon: FaUsers,
+      text: t("achievements.clients"),
+      value: 1000,
+      suffix: "+",
+    },
+    {
+      icon: FaGlobeAsia,
+      text: t("achievements.destinations"),
+      value: 50,
+      suffix: "+",
+    },
+    {
+      icon: FaClock,
+      text: t("achievements.service"),
+      value: "24/7",
+      suffix: "",
+    },
   ];
 
   const tourPackageIncludes = [
-    { icon: FaPlane, text: "Aviabiletlar" },
-    { icon: FaHotel, text: "Mehmonxona xizmatlari" },
-    { icon: FaUtensils, text: "Ovqatlanish - konsepsiyaga muvofiq" },
-    { icon: FaCar, text: "Kutib olish va kuzatib qo'yish xizmati" },
-    { icon: FaStar, text: "Professional gidlar" },
-    { icon: FaPhoneAlt, text: "24/7 qo'llab-quvvatlash" },
+    { icon: FaPlane, text: t("tour_package.flight") },
+    { icon: FaHotel, text: t("tour_package.hotel") },
+    { icon: FaCoffee, text: t("tour_package.food") },
+    { icon: FaCar, text: t("tour_package.transfer") },
+    { icon: FaStar, text: t("tour_package.guides") },
+    { icon: FaPhoneAlt, text: t("tour_package.support") },
   ];
 
+  const achievementRefs = achievements.map(() => useRef(null));
+  const achievementInView = achievements.map((_, index) => {
+    const [ref, inView] = useInView({
+      triggerOnce: true,
+      threshold: 0.1,
+    });
+    achievementRefs[index].current = ref;
+    return inView;
+  });
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-900 via-green-800 to-emerald-900">
-      <section className="relative py-20 px-4 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/pattern.svg')] opacity-5"></div>
+    <main id="about" className="min-h-screen bg-gradient-to-br bg-[#22C55E]">
+      <section className="relative py-10 px-4 overflow-hidden">
         <motion.div
           className="max-w-6xl mx-auto relative z-10"
           variants={containerVariants}
@@ -99,91 +115,105 @@ const CompanyInfo = () => {
               whileHover={{ scale: 1.05 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              <div className="w-32 h-32 p-1 bg-gradient-to-r from-green-400 to-emerald-500 rounded-full">
+              <div className="w-32 h-32 p-1 bg-gradient-to-r bg-[#22C55E] rounded-full">
                 <div className="w-full h-full border-4 border-white rounded-full overflow-hidden">
                   <img
                     src="/2.jpg"
-                    alt="FAXR TRAVEL"
+                    alt={t("company_name")}
                     className="w-full h-full object-cover"
                   />
                 </div>
               </div>
               <h2 className="text-4xl ml-5 md:text-5xl font-bold text-white mb-4">
-                FAXR TRAVEL
+                {t("company_name")}
               </h2>
             </motion.div>
-            <p className="text-green-100 text-xl font-semibold mb-2">
-              Mas'uliyati Cheklangan Jamiyat
+            <p className="text-white text-xl font-semibold mb-2">
+              {t("company_type")}
             </p>
           </motion.div>
 
           <motion.div
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-16"
+            className="grid grid-cols-2 bg-[#22C55E]  md:grid-cols-4 gap-6 mb-16"
             variants={itemVariants}
           >
-            {achievements.map((achievement, index) => (
-              <div
-                key={index}
-                className="bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 p-6 text-center text-white shadow-lg"
-              >
-                <achievement.icon className="w-8 h-8 mx-auto mb-4 text-green-400" />
-                <h3 className="text-2xl font-bold mb-2">{achievement.value}</h3>
-                <p className="text-green-100 text-sm">{achievement.text}</p>
-              </div>
-            ))}
+            {achievements.map((achievement, index) => {
+              const controls = useAnimation();
+
+              useEffect(() => {
+                if (achievementInView[index]) {
+                  controls.start({ opacity: 1, y: 0 });
+                }
+              }, [controls, achievementInView, index]);
+
+              return (
+                <motion.div
+                  key={index}
+                  ref={achievementRefs[index].current}
+                  className="bg-white/10 backdrop-blur-lg rounded-xl border border-white/20 p-6 text-center text-white shadow-lg"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={controls}
+                  transition={{ duration: 0.5, delay: index * 0.1 }}
+                >
+                  <achievement.icon className="w-8 h-8 mx-auto mb-4 text-green-100" />
+                  <motion.h3
+                    className="text-2xl font-bold mb-2"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.5, delay: 0.5 + index * 0.1 }}
+                  >
+                    {achievementInView[index] &&
+                    achievement.value !== "24/7" ? (
+                      <motion.span
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
+                      >
+                        <CountUp
+                          start={0}
+                          end={achievement.value}
+                          duration={5}
+                          separator=","
+                        />
+                        {achievement.suffix}
+                      </motion.span>
+                    ) : (
+                      achievement.value
+                    )}
+                  </motion.h3>
+                  <p className="text-green-100 text-sm">{achievement.text}</p>
+                </motion.div>
+              );
+            })}
           </motion.div>
 
           <motion.div
-            className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-16 border border-white/20 shadow-xl"
+            className=" backdrop-blur-lg rounded-3xl bg-[#22C55E]  p-8 md:p-12 mb-16 border border-white/20 shadow-xl"
             variants={itemVariants}
           >
             <h2 className="text-3xl font-bold text-white mb-6 text-center">
-              Biz haqimizda
+              {t("about")}
             </h2>
             <p className="text-green-100 text-lg leading-relaxed text-justify">
-              FAXR TRAVEL MCHJ – O'zbekistonning yetakchi sayohat
-              agentliklaridan biri sifatida, biz mijozlarimizga faqat eng sara
-              xizmatlarni taqdim etamiz. Bizning professional jamoamiz har bir
-              sayohatingizni mukammal tashkil etish uchun barcha tafsilotlarga
-              alohida e'tibor qaratadi. Biz mijozlarimizga nafaqat sayohat,
-              balki unutilmas tajriba va yorqin taassurotlar taqdim
-              etamiz.Premium sayohat hamrohingiz sizga nafaqat qulay va
-              zamonaviy safar tajribasini taqdim etadi, balki har bir tafsilotga
-              e'tibor qaratilgan xizmatlar orqali sizning vaqt va
-              qulayligingizni qadrlaydi. Quyidagi xususiyatlar bilan farqlanadi:
-              Maxsus xizmatlar: Shaxsiy sayohat rejalashtirish, maxsus
-              transferlar, va mehmonxonalar bilan toʻliq integratsiyalashgan
-              xizmatlar. Qoʻshimcha qulayliklar: VIP kutish xonalari, tezkor
-              hujjat nazorati, va individual yoʻl-yoʻriqlar. Eksklyuziv
-              chegirmalar: Premium sheriklar va xizmat ko‘rsatuvchilar bilan
-              maxsus chegirmalar va bonus dasturlari. 24/7 yordam: Har qanday
-              favqulodda vaziyatda yoki savollaringiz bo‘lganda, malakali
-              yordamchi jamoamiz siz bilan doimo aloqada bo‘ladi. Yuqori
-              darajadagi tajriba: Sayohat davomida eng so‘nggi texnologiyalar va
-              shaxsiylashtirilgan xizmatlar orqali unutilmas tajriba yaratiladi.
-              Premium sayohat hamrohingiz bilan nafaqat manzilingizga erishasiz,
-              balki har bir sayohatingiz unutilmas va qulay kechishi uchun
-              barcha zarur sharoitlar yaratiladi. Agar qo‘shimcha ma’lumot yoki
-              maslahat kerak bo‘lsa, biz har doim sizga yordam berishga
-              tayyormiz!
+              {t("about_text")}
             </p>
           </motion.div>
 
-          <motion.div className="mb-16" variants={itemVariants}>
+          <motion.div className="mb-16 bg-[#22C55E] " variants={itemVariants}>
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              Tur paket tarkibi
+              {t("tour_package_title")}
             </h2>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
               {tourPackageIncludes.map((service, index) => (
                 <motion.div
                   key={index}
-                  className="bg-white/10 backdrop-blur-lg rounded-2xl p-6 text-center border border-white/20 shadow-lg"
+                  className="backdrop-blur-lg rounded-2xl p-6 text-center border border-white/20 text-red shadow-lg"
                   whileHover={{
-                    scale: 1.05,
+                    scale: 1.1,
                     backgroundColor: "rgba(255,255,255,0.2)",
                   }}
                 >
-                  <service.icon className="w-10 h-10 mx-auto mb-4 text-green-400" />
+                  <service.icon className="w-10 h-10 mx-auto mb-4 text-white" />
                   <p className="text-white font-medium">{service.text}</p>
                 </motion.div>
               ))}
@@ -191,87 +221,87 @@ const CompanyInfo = () => {
           </motion.div>
 
           <motion.div
-            className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-16 border border-white/20 shadow-xl"
+            className="bg-white/10 bg-[#22C55E]  backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-16 border border-white/20 shadow-xl"
             variants={itemVariants}
           >
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
-              Biz bilan bog'laning
+              {t("contact_title")}
             </h2>
-            <div className="space-y-6">
+            <div className="space-y-6 ">
               <div className="flex flex-col items-center gap-6">
                 <motion.a
                   href="tel:+998953120202"
-                  className="inline-flex items-center gap-3 bg-green-500 hover:bg-green-600 text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg transition duration-300"
+                  className="inline-flex items-center gap-3 bg-[#22C55E] text-white px-8 py-4 rounded-full text-lg font-semibold shadow-lg transition duration-300"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <FaPhoneAlt className="animate-bounce" />
-                  +998 95 312 02 02
+                  {t("phone")}
                 </motion.a>
-
                 <div className="text-center space-y-2">
                   <div className="flex items-center justify-center gap-2 text-green-100">
-                    <FaMapMarkerAlt className="text-green-400 flex-shrink-0" />
-                    <p>
-                      Тошкент шаҳар, Яккасарой тумани Yakkasaroy MFY,
-                      Bog'ibo'ston ko'chasi, 147-uy
-                    </p>
+                    <FaMapMarkerAlt className="text-green-100 flex-shrink-0" />
+                    <p>{t("address")}</p>
                   </div>
                 </div>
-
-                <div className="flex gap-6 text-3xl">
-                  <motion.a
-                    href="https://instagram.com/faxr.travel"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-green-400 hover:text-green-300 transition"
-                    whileHover={{ scale: 1.2, rotate: 15 }}
-                  >
-                    <FaInstagram />
-                    <span className="text-base">@faxr.travel</span>
-                  </motion.a>
-                  <motion.a
-                    href="https://t.me/faxrtravel"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-green-400 hover:text-green-300 transition"
-                    whileHover={{ scale: 1.2, rotate: -15 }}
-                  >
-                    <FaTelegram />
-                    <span className="text-base">@faxrtravel</span>
-                  </motion.a>
+                <div className="flex flex-col items-center gap-6">
+                  <h3 className="font-bold text-lg text-white">
+                    {t("social_media")}
+                  </h3>
+                  <div className="flex gap-6 text-3xl">
+                    <motion.a
+                      href="https://instagram.com/faxr.travel"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-red-600 hover:text-green-100 transition"
+                      whileHover={{ scale: 1.2, rotate: 15 }}
+                    >
+                      <FaInstagram />
+                    </motion.a>
+                    <motion.a
+                      href="https://t.me/faxrtravel"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-blue-800 transition"
+                      whileHover={{ scale: 1.2, rotate: -15 }}
+                    >
+                      <FaTelegram />
+                    </motion.a>
+                  </div>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          <motion.div variants={itemVariants}>
-            <div className="bg-white/10 backdrop-blur-lg rounded-3xl p-8 md:p-12 text-center border border-white/20 shadow-xl">
-              <FaQuoteLeft className="w-8 h-8 mx-auto mb-6 text-green-400" />
-              <motion.div
-                key={currentTestimonial}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -20 }}
-                className="space-y-4"
-              >
-                <p className="text-white text-lg md:text-xl italic">
-                  {testimonials[currentTestimonial].text}
-                </p>
-                <div>
-                  <p className="text-green-400 font-semibold">
-                    {testimonials[currentTestimonial].author}
+          {testimonials.length > 0 && (
+            <motion.div variants={itemVariants}>
+              <div className="bg-white/10 bg-[#22C55E]  backdrop-blur-lg rounded-3xl p-8 md:p-12 text-center border border-white/20 shadow-xl">
+                <FaQuoteLeft className="w-8 h-8 mx-auto mb-6 text-green-200" />
+                <motion.div
+                  key={currentTestimonial}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -20 }}
+                  className="space-y-4"
+                >
+                  <p className="text-white text-lg md:text-xl italic">
+                    {testimonials[currentTestimonial].text}
                   </p>
-                  <p className="text-green-200 text-sm">
-                    {testimonials[currentTestimonial].role}
-                  </p>
-                </div>
-              </motion.div>
-            </div>
-          </motion.div>
+                  <div>
+                    <p className="text-green-50 font-semibold">
+                      {testimonials[currentTestimonial].author}
+                    </p>
+                    <p className="text-green-100 text-sm">
+                      {testimonials[currentTestimonial].role}
+                    </p>
+                  </div>
+                </motion.div>
+              </div>
+            </motion.div>
+          )}
         </motion.div>
       </section>
-    </div>
+    </main>
   );
 };
 

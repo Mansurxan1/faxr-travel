@@ -1,50 +1,28 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
+import LanguageDetector from "i18next-browser-languagedetector";
+
+import translationEN from "./locales/eng.json";
+import translationUZ from "./locales/uz.json";
+import translationRU from "./locales/ru.json";
 
 const resources = {
-  uz: {
-    translation: {
-      home: "Bosh sahifa",
-      about: "Biz haqimizda",
-      services: "Xizmatlar",
-      contact: "Aloqa",
-      trips: "Sayohatlar",
-      day: "kun",
-      all: "Batafsil",
-    },
-  },
-  ru: {
-    translation: {
-      home: "Главная",
-      about: "О нас",
-      services: "Услуги",
-      contact: "Контакты",
-      trips: "Путешествия",
-      day: "день",
-      all: "Узнать больше",
-    },
-  },
-  en: {
-    translation: {
-      home: "Home",
-      about: "About",
-      services: "Services",
-      contact: "Contact",
-      trips: "Trips",
-      day: "day",
-      all: "Learn more",
-    },
-  },
+  en: { translation: translationEN },
+  uz: { translation: translationUZ },
+  ru: { translation: translationRU },
 };
 
-const defaultLang =
-  typeof window !== "undefined" ? localStorage.getItem("lang") || "uz" : "uz";
-
-i18n.use(initReactI18next).init({
-  resources,
-  lng: defaultLang,
-  fallbackLng: "uz",
-  interpolation: { escapeValue: false },
-});
+i18n
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources,
+    fallbackLng: "uz", // Agar til aniqlanmasa, "uz" standart bo‘ladi
+    interpolation: { escapeValue: false },
+    detection: {
+      order: ["cookie", "localStorage", "navigator"],
+      caches: ["cookie", "localStorage"],
+    },
+  });
 
 export default i18n;
