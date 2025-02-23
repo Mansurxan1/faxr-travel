@@ -116,7 +116,7 @@ const CompanyInfo = () => {
               transition={{ type: "spring", stiffness: 300 }}
             >
               <div className="w-32 h-32 p-1 bg-gradient-to-r bg-[#22C55E] rounded-full">
-                <div className="w-full h-full border-4 border-white rounded-full overflow-hidden">
+                <div className="border-4 border-white rounded-full overflow-hidden">
                   <img
                     src="/2.jpg"
                     alt={t("company_name")}
@@ -253,7 +253,7 @@ const CompanyInfo = () => {
                       href="https://instagram.com/faxr.travel"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-red-600 hover:text-green-100 transition"
+                      className="flex items-center gap-2 text-white transition"
                       whileHover={{ scale: 1.2, rotate: 15 }}
                     >
                       <FaInstagram />
@@ -262,7 +262,7 @@ const CompanyInfo = () => {
                       href="https://t.me/faxrtravel"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center gap-2 text-blue-800 transition"
+                      className="flex items-center gap-2 text-white transition"
                       whileHover={{ scale: 1.2, rotate: -15 }}
                     >
                       <FaTelegram />

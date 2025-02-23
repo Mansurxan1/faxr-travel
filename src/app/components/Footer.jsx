@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import { FaInstagram, FaPhoneAlt, FaTelegram } from "react-icons/fa";
-import { FaLocationDot } from "react-icons/fa6";
 import { motion } from "framer-motion";
 
 export default function Footer() {
@@ -19,44 +18,48 @@ export default function Footer() {
   return (
     <footer className="bg-green-600 border-t border-green-500 shadow-2xl text-white">
       <div className="container mx-auto px-4 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+        <div className="grid grid-cols-1 items-center text-center sm:text-left sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
           <motion.div
             className="space-y-4 sm:space-y-6 flex flex-col items-center sm:items-start"
             {...fadeInUp}
           >
             <Link
               href="/"
-              className="block transition-opacity flex items-center hover:opacity-80"
+              className="block transition-opacity flex items-center justify-center hover:opacity-80"
             >
               <Image
                 src="/logo.png"
                 alt="Faxr Travel"
                 width={80}
                 height={64}
-                className="w-auto h-12 sm:h-16"
+                className="w-auto h-12 sm:h-16 mx-auto"
                 priority
               />
             </Link>
-            <div className="flex items-start space-x-3">
-              <FaLocationDot className="w-5 h-5 mt-1 flex-shrink-0 text-white" />
-              <p className="text-sm leading-relaxed">{t("address")}</p>
-            </div>
-            <div className="flex items-center space-x-3">
-              <FaPhoneAlt className="w-5 h-5 text-white" />
-              <a
-                href="tel:+998953120202"
-                className="text-sm hover:underline transition-colors duration-300"
-              >
-                {t("phone")}
-              </a>
+            <div className="flex flex-col items-center sm:items-start space-y-2">
+              <div className="flex items-center justify-center space-x-2">
+                <p className="text-sm leading-relaxed">{t("address")}</p>
+              </div>
+              <div className="flex items-center justify-center space-x-2">
+                <FaPhoneAlt className="w-5 h-5 text-white" />
+                <a
+                  href="tel:+998953120202"
+                  className="text-sm hover:underline transition-colors duration-300"
+                >
+                  {t("phone")}
+                </a>
+              </div>
             </div>
           </motion.div>
 
-          <motion.div className="space-y-4 sm:space-y-6" {...fadeInUp}>
+          <motion.div
+            className="space-y-4 items-center flex flex-col sm:space-y-6"
+            {...fadeInUp}
+          >
             <h3 className="font-semibold text-lg sm:text-xl text-white">
               {t("footer.navigation")}
             </h3>
-            <nav className="flex flex-col space-y-2 sm:space-y-3">
+            <nav className="flex flex-col items-center sm:items-start space-y-2 sm:space-y-3">
               <Link
                 href="/about"
                 className="text-sm hover:text-green-200 transition-colors duration-300"
@@ -88,7 +91,7 @@ export default function Footer() {
             <h3 className="font-semibold text-lg sm:text-xl text-white">
               {t("footer.legal")}
             </h3>
-            <nav className="flex flex-col space-y-2 sm:space-y-3">
+            <nav className="flex flex-col items-center sm:items-start space-y-2 sm:space-y-3">
               <Link
                 href="/terms"
                 className="text-sm hover:text-green-200 transition-colors duration-300"
@@ -111,13 +114,13 @@ export default function Footer() {
           </motion.div>
 
           <motion.div
-            className="space-y-4 sm:space-y-6 flex flex-col items-center sm:items-start"
+            className="space-y-4 sm:space-y-6 flex flex-col items-center"
             {...fadeInUp}
           >
             <h3 className="font-semibold text-lg sm:text-xl text-white">
               {t("social_media")}
             </h3>
-            <div className="flex space-x-6">
+            <div className="flex justify-center space-x-6">
               <a
                 href="https://instagram.com/faxr.travel"
                 target="_blank"

@@ -2,7 +2,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import "../i18n/i18n"; // i18n sozlamalarini import qilish
+import "../i18n/i18n";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 
@@ -23,13 +23,18 @@ export default function RootLayout({ children }) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedLang = localStorage.getItem("lang") || "uz";
-      i18n.changeLanguage(storedLang); // i18n tilini sinxronlash
+      i18n.changeLanguage(storedLang);
       setLang(storedLang);
     }
   }, [i18n]);
 
   return (
     <html lang={lang}>
+      <head>
+        <title>Faxr Travel</title>
+        <link rel="icon" href="/2.jpg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
