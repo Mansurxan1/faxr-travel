@@ -117,7 +117,7 @@ export default function PremiumTour({ onOpenLoginModal }) {
       <motion.h2
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
-        className="text-4xl md:text-6xl font-extrabold text-center mb-8 tracking-tight drop-shadow-lg"
+        className="text-4xl font-extrabold text-center mb-8 tracking-tight drop-shadow-lg"
       >
         Sayohat Turlari
       </motion.h2>

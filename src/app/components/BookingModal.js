@@ -5,9 +5,16 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import { X } from "lucide-react";
 
+// Cookie dan token olish funksiyasi
+const getCookie = (name) => {
+  const cookies = document.cookie.split("; ");
+  const tokenCookie = cookies.find((row) => row.startsWith(`${name}=`));
+  return tokenCookie ? tokenCookie.split("=")[1] : null;
+};
+
 const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
   const userData = JSON.parse(localStorage.getItem("user") || "{}");
-  const token = localStorage.getItem("token");
+  const token = getCookie("token"); // Cookie dan tokenni olish
 
   const [formData, setFormData] = useState({
     name: userData.name || "",
@@ -15,6 +22,7 @@ const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
     phoneNumber: userData.phone ? userData.phone.replace("+998", "") : "",
     passengers: 1,
   });
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -30,7 +38,6 @@ const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
-    console.log("Ma’lumot yangilandi:", { ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -41,7 +48,7 @@ const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
     const fullPhone = `+998${formData.phoneNumber}`;
 
     if (formData.phoneNumber.length !== 9) {
-      setError("Telefon raqami 9 raqamdan iborat bo‘lishi kerak");
+      setError("Telefon raqami 9 ta raqamdan iborat bo‘lishi kerak");
       setLoading(false);
       return;
     }
@@ -58,7 +65,7 @@ const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
       return;
     }
 
-    console.log("API uchun Bearer Token:", `Bearer ${token}`); // Bearer tokenni konsolga chiqarish
+    console.log("API uchun Bearer Token:", `Bearer ${token}`);
 
     const payload = {
       tour: tourId,
@@ -66,7 +73,6 @@ const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
       customer: {
         name: formData.name,
         phone: fullPhone,
-        email: formData.email,
       },
     };
 
@@ -76,7 +82,7 @@ const BookingModal = ({ isOpen, onClose, tourId, actionType }) => {
         payload,
         {
           headers: {
-            Authorization: `Bearer ${token}`, // Bearer prefiksi bilan token yuboriladi
+            Authorization: `Bearer ${token}`,
           },
         }
       );

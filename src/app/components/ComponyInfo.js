@@ -22,6 +22,7 @@ import { FaBuildingColumns } from "react-icons/fa6";
 import { motion, useAnimation } from "framer-motion";
 import CountUp from "react-countup";
 import Tour from "./ui/Tour";
+import Partners from "./Partners";
 
 const CompanyInfo = () => {
   const { t } = useTranslation();
@@ -186,6 +187,7 @@ const CompanyInfo = () => {
               );
             })}
           </motion.div>
+          <Partners />
           <Tour />
           <motion.div
             id="about"
