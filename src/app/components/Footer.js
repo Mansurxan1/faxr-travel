@@ -15,10 +15,17 @@ export default function Footer() {
     transition: { duration: 0.6 },
   };
 
+  const handleScroll = (id) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <footer className="bg-green-600 border-t border-green-500 shadow-2xl text-white">
       <div className="container mx-auto px-4 py-8 sm:py-12">
-        <div className="grid grid-cols-1 items-center text-center sm:text-left sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
+        <div className="grid grid-cols-1 text-center sm:text-left sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12">
           <motion.div
             className="space-y-4 sm:space-y-6 flex flex-col items-center sm:items-start"
             {...fadeInUp}
@@ -60,30 +67,30 @@ export default function Footer() {
               {t("footer.navigation")}
             </h3>
             <nav className="flex flex-col items-center sm:items-start space-y-2 sm:space-y-3">
-              <Link
-                href="/about"
-                className="text-sm hover:text-green-200 transition-colors duration-300"
+              <div
+                onClick={() => handleScroll("about")}
+                className="text-sm text-white cursor-pointer hover:text-green-200 transition-colors duration-300"
               >
-                {t("footer.about")}
-              </Link>
-              <Link
-                href="/tours"
-                className="text-sm hover:text-green-200 transition-colors duration-300"
+                {t("about")}
+              </div>
+              <div
+                onClick={() => handleScroll("services")}
+                className="text-sm text-white cursor-pointer hover:text-green-200 transition-colors duration-300"
               >
-                {t("footer.tours")}
-              </Link>
-              <Link
-                href="/services"
-                className="text-sm hover:text-green-200 transition-colors duration-300"
+                {t("services")}
+              </div>
+              <div
+                onClick={() => handleScroll("trips")}
+                className="text-sm text-white cursor-pointer hover:text-green-200 transition-colors duration-300"
               >
-                {t("footer.services")}
-              </Link>
-              <Link
-                href="/contact"
-                className="text-sm hover:text-green-200 transition-colors duration-300"
+                {t("trips")}
+              </div>
+              <div
+                onClick={() => handleScroll("contact")}
+                className="text-sm text-white cursor-pointer hover:text-green-200 transition-colors duration-300"
               >
-                {t("footer.contact")}
-              </Link>
+                {t("contact")}
+              </div>
             </nav>
           </motion.div>
 

@@ -21,6 +21,7 @@ import {
 import { FaBuildingColumns } from "react-icons/fa6";
 import { motion, useAnimation } from "framer-motion";
 import CountUp from "react-countup";
+import Tour from "./ui/Tour";
 
 const CompanyInfo = () => {
   const { t } = useTranslation();
@@ -101,7 +102,7 @@ const CompanyInfo = () => {
   });
 
   return (
-    <main id="about" className="min-h-screen bg-gradient-to-br bg-[#22C55E]">
+    <main className="min-h-screen bg-gradient-to-br bg-[#22C55E]">
       <section className="relative py-10 px-4 overflow-hidden">
         <motion.div
           className="max-w-6xl mx-auto relative z-10"
@@ -132,7 +133,6 @@ const CompanyInfo = () => {
               {t("company_type")}
             </p>
           </motion.div>
-
           <motion.div
             className="grid grid-cols-2 bg-[#22C55E]  md:grid-cols-4 gap-6 mb-16"
             variants={itemVariants}
@@ -186,8 +186,9 @@ const CompanyInfo = () => {
               );
             })}
           </motion.div>
-
+          <Tour />
           <motion.div
+            id="about"
             className=" backdrop-blur-lg rounded-3xl bg-[#22C55E]  p-8 md:p-12 mb-16 border border-white/20 shadow-xl"
             variants={itemVariants}
           >
@@ -199,7 +200,11 @@ const CompanyInfo = () => {
             </p>
           </motion.div>
 
-          <motion.div className="mb-16 bg-[#22C55E] " variants={itemVariants}>
+          <motion.div
+            id="services"
+            className="mb-16 bg-[#22C55E] "
+            variants={itemVariants}
+          >
             <h2 className="text-3xl font-bold text-white mb-8 text-center">
               {t("tour_package_title")}
             </h2>
@@ -221,6 +226,7 @@ const CompanyInfo = () => {
           </motion.div>
 
           <motion.div
+            id="contact"
             className="bg-white/10 bg-[#22C55E]  backdrop-blur-lg rounded-3xl p-8 md:p-12 mb-16 border border-white/20 shadow-xl"
             variants={itemVariants}
           >

@@ -5,6 +5,8 @@
   "contact": "Contact",
   "company_name": "FAXR TRAVEL",
   "company_type": "Limited Liability Company",
+  "profile": "Profile",
+  "login": "Sign in",
   "about_text": "FAXR TRAVEL LLC is a leading travel agency in Uzbekistan, providing unforgettable travel experiences to our clients.",
   "tour_package_title": "Tour Package Includes",
   "all": "See All",
@@ -52,15 +54,11 @@
   "footer": {
     "address": "123 Tashkent city, Uzbekistan",
     "phone": "+998 90 123 45 67",
-    "navigation": "Navigation",
-    "about": "About Us",
-    "tours": "Tours",
-    "services": "Services",
-    "contact": "Contact",
+    "navigation": "Information",
     "legal": "Legal",
     "terms": "Terms of Use",
     "privacy": "Privacy Policy",
-    "customer_agreement": "Customer Agreement",
+    "agreement": "Customer Agreement",
     "social": "Social Media",
     "copyright": "All rights reserved."
   }

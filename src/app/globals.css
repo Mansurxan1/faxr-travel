@@ -3,7 +3,9 @@
 @tailwind utilities;
 
 html {
-  scroll-padding-top: 80px;
+  scroll-padding-top: 100px;
   user-select: none;
   background: #22C55E;
 }
+
+

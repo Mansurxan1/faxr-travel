@@ -13,6 +13,7 @@ const Banner = () => {
   const slides = useHomeStore((state) => state.slides);
   const { t, i18n } = useTranslation();
   const [isClient, setIsClient] = useState(false);
+
   useEffect(() => {
     setIsClient(true);
   }, []);
@@ -55,7 +56,7 @@ const Banner = () => {
           return (
             <SwiperSlide
               key={slide.id}
-              className="relative flex items-center justify-start text-white"
+              className="relative flex items-center justify-start text-white h-full"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-black/30 to-black/10 z-10" />
               <img
@@ -64,7 +65,7 @@ const Banner = () => {
                 className="absolute top-0 left-0 w-full h-full object-cover"
                 loading="lazy"
               />
-              <div className="relative z-20 px-6 md:px-12 lg:px-24 pt-40 md:pt-72 lg:pt-40 max-w-4xl">
+              <div className="relative z-20 px-6 md:px-12 lg:px-24 flex flex-col justify-center h-full max-w-4xl">
                 <h2 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6">
                   {title}
                 </h2>
@@ -72,18 +73,15 @@ const Banner = () => {
                   {desc}
                 </p>
                 {slide.price && slide.day && (
-                  <div className="inline-flex items-center gap-4 bg-green-600 backdrop-blur-sm px-6 py-3 rounded-full">
-                    <span className="text-xl font-semibold">
+                  <div className="mb-2">
+                    <span className="bg-green-600 py-3 px-8 rounded-full text-white ">
                       {slide.price} $
-                    </span>
-                    <span className="text-lg">
-                      {slide.day} {t("banner.days")}
                     </span>
                   </div>
                 )}
                 <div className="mt-4">
                   <button className="bg-green-600 px-6 py-3 rounded-full text-white hover:bg-green-700 transition">
-                    {t("banner.explore")}
+                    {slide.day} {t("banner.days")}
                   </button>
                 </div>
               </div>

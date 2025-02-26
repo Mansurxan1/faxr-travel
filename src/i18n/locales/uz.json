@@ -32,6 +32,8 @@
   "phone": "+998 95 312 02 02",
   "address": "Toshkent shahri, Yakkasaroy tumani Yakkasaroy MFY, Bog'ibo'ston ko'chasi, 147-uy",
   "social_media": "Ijtimoiy tarmoqlar",
+  "profile": "Profil",
+  "login": "Kirish",
   "testimonials": [
     {
       "text": "Ajoyib xizmat! Dubaiga qilgan sayohatimiz unutilmas bo'ldi.",
@@ -52,15 +54,11 @@
   "footer": {
       "address": "123 Toshkent shahri, O'zbekiston",
       "phone": "+998 90 123 45 67",
-      "navigation": "Navigatsiya",
-      "about": "Biz haqimizda",
-      "tours": "Sayohatlar",
-      "services": "Xizmatlar",
-      "contact": "Bog'lanish",
+      "navigation": "Ma'lumot",
       "legal": "Huquqiy",
       "terms": "Foydalanuvchi shartlari",
       "privacy": "Maxfiylik siyosati",
-      "customer_agreement": "Mijoz maxfiylik shartnomasi",
+      "agreement": "Mijoz maxfiylik shartnomasi",
       "social": "Ijtimoiy tarmoqlar",
       "copyright": "Barcha huquqlar himoyalangan."
   }
