@@ -26,11 +26,10 @@ const AuthModal = ({ isOpen, onClose, onOpenProfileModal }) => {
           <X className="h-6 w-6" />
         </button>
         <h3 className="text-2xl font-bold text-green-600 mb-6 text-center">
-          Tizimga kirish kerak
+          Login Required
         </h3>
         <p className="text-gray-600 mb-6 text-center">
-          Sayohatni sotib olish yoki bron qilish uchun tizimga kiring yoki
-          ro'yxatdan o'ting.
+          Please log in or register to purchase or book a tour.
         </p>
         <div className="grid grid-cols-2 gap-4">
           <motion.button
@@ -39,7 +38,7 @@ const AuthModal = ({ isOpen, onClose, onOpenProfileModal }) => {
             onClick={() => onOpenProfileModal("login")}
             className="bg-green-600 text-white py-3 rounded-xl font-medium"
           >
-            Kirish
+            Login
           </motion.button>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -47,7 +46,7 @@ const AuthModal = ({ isOpen, onClose, onOpenProfileModal }) => {
             onClick={() => onOpenProfileModal("register")}
             className="bg-gray-200 text-green-600 py-3 rounded-xl font-medium"
           >
-            Ro'yxatdan o'tish
+            Register
           </motion.button>
         </div>
       </motion.div>

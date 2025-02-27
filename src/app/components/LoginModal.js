@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import useUserStore from "@s/store/userStore";
+import Cookies from "js-cookie";
 
 const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const { t } = useTranslation();
@@ -12,39 +15,32 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
   const [error, setError] = useState(null);
   const [isRegisterMode, setIsRegisterMode] = useState(false);
 
-  // Kirish funksiyasi
+  const setUser = useUserStore((state) => state.setUser);
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError(null);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
+        { email, password },
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
       );
 
-      const data = await response.json();
-      if (response.ok) {
-        console.log(
-          "Foydalanuvchi kirdi, Bearer Token:",
-          `Bearer ${data.token}`
-        ); 
-        onLoginSuccess(data.user);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token); 
-        onClose();
-      } else {
-        setError(data.message || "Kirish amalga oshmadi");
-      }
+      const { user, token } = response.data;
+      Cookies.set("token", token, { expires: 7, secure: true });
+      setUser(user, token);
+      console.log("User logged in:", { user, token });
+      onLoginSuccess(user);
+      onClose();
     } catch (error) {
-      setError("Kirishda xatolik yuz berdi.");
-      console.error("Kirish xatosi:", error);
+      setError(
+        error.response?.data.message || "An error occurred during login."
+      );
     }
   };
 
@@ -53,36 +49,29 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await fetch(
+      const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
+        { email, password },
         {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, password }),
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
         }
       );
 
-      const data = await response.json();
-      if (response.ok) {
-        console.log(
-          "Ro‘yxatdan o‘tgan foydalanuvchi, Bearer Token:",
-          `Bearer ${data.token}`
-        ); 
-        alert("Ro'yxatdan o'tish muvaffaqiyatli!");
-        onLoginSuccess(data.user);
-        localStorage.setItem("user", JSON.stringify(data.user));
-        localStorage.setItem("token", data.token);
-        onClose();
-      } else if (response.status === 409) {
-        setError("Siz avval ro'yxatdan o'tgansiz!");
-      } else {
-        setError(data.message || "Ro'yxatdan o'tish amalga oshmadi");
-      }
+      const { user, token } = response.data;
+      Cookies.set("token", token, { expires: 7, secure: true });
+      setUser(user, token);
+      console.log("User registered:", { user, token });
+      alert("Registration successful!");
+      onLoginSuccess(user);
+      onClose();
     } catch (error) {
-      setError("Ro'yxatdan o'tishda xatolik yuz berdi.");
-      console.error("Registratsiya xatosi:", error);
+      setError(
+        error.response?.status === 409
+          ? "You are already registered!"
+          : error.response?.data.message ||
+              "An error occurred during registration."
+      );
     }
   };
 
@@ -125,21 +114,21 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+                className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
                 placeholder="example@email.com"
                 required
               />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Parol
+                Password
               </label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
-                placeholder="Parol"
+                className="mt-1 w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 text-black"
+                placeholder="Password"
                 required
               />
             </div>
@@ -150,18 +139,16 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
               type="submit"
               className="w-full bg-[#22C55E] text-white font-medium py-2 rounded-md hover:bg-green-600 transition duration-200"
             >
-              {isRegisterMode ? "Ro‘yxatdan o‘tish" : "Kirish"}
+              {isRegisterMode ? t("register") : t("login")}
             </button>
             <p className="text-center text-sm text-gray-600">
-              {isRegisterMode
-                ? "Ro‘yxatdan o‘tganmisiz?"
-                : "Ro‘yxatdan o‘tmaganmisiz?"}{" "}
+              {isRegisterMode ? "Already registered?" : "Not registered yet?"}{" "}
               <button
                 type="button"
                 onClick={() => setIsRegisterMode(!isRegisterMode)}
                 className="text-green-500 hover:underline"
               >
-                {isRegisterMode ? "Kirish" : "Ro‘yxatdan o‘tish"}
+                {isRegisterMode ? t("login") : t("register")}
               </button>
             </p>
           </form>

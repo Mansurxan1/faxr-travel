@@ -13,15 +13,21 @@ import {
 } from "lucide-react";
 import AuthModal from "../AuthModal";
 import BookingModal from "../BookingModal";
+import LoginModal from "../LoginModal";
+import useUserStore from "@s/store/userStore";
 
-export default function PremiumTour({ onOpenLoginModal }) {
+export default function PremiumTour() {
   const [tours, setTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [selectedTourId, setSelectedTourId] = useState(null);
   const [actionType, setActionType] = useState(null);
+
+  const user = useUserStore((state) => state.user);
+  const token = useUserStore((state) => state.token);
 
   useEffect(() => {
     const fetchTours = async () => {
@@ -41,7 +47,7 @@ export default function PremiumTour({ onOpenLoginModal }) {
   }, []);
 
   const isLoggedIn = () => {
-    return !!localStorage.getItem("user") && !!localStorage.getItem("token");
+    return user && token; 
   };
 
   const handlePurchase = (tourId) => {
@@ -50,6 +56,8 @@ export default function PremiumTour({ onOpenLoginModal }) {
       setActionType("purchase");
       setIsBookingModalOpen(true);
     } else {
+      setSelectedTourId(tourId); 
+      setActionType("purchase");
       setIsAuthModalOpen(true);
     }
   };
@@ -60,23 +68,30 @@ export default function PremiumTour({ onOpenLoginModal }) {
       setActionType("book");
       setIsBookingModalOpen(true);
     } else {
+      setSelectedTourId(tourId); 
+      setActionType("book");
       setIsAuthModalOpen(true);
     }
   };
 
-  const closeAuthModal = () => {
-    setIsAuthModalOpen(false);
-  };
-
+  const closeAuthModal = () => setIsAuthModalOpen(false);
   const closeBookingModal = () => {
     setIsBookingModalOpen(false);
     setSelectedTourId(null);
     setActionType(null);
   };
+  const closeLoginModal = () => setIsLoginModalOpen(false);
 
-  const openProfileModal = (mode) => {
-    alert(`${mode} funksiyasi qo'shilishi kerak`);
+  const handleOpenLoginModal = (mode) => {
     setIsAuthModalOpen(false);
+    setIsLoginModalOpen(true);
+  };
+
+  const handleLoginSuccess = (userData) => {
+    closeLoginModal();
+    if (selectedTourId && actionType) {
+      setIsBookingModalOpen(true);
+    }
   };
 
   if (loading) {
@@ -84,11 +99,7 @@ export default function PremiumTour({ onOpenLoginModal }) {
       <div className="min-h-screen text-white flex items-center justify-center">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{
-            duration: 1,
-            repeat: Number.POSITIVE_INFINITY,
-            ease: "linear",
-          }}
+          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
           className="rounded-full h-20 w-20 border-t-4 border-white/80 shadow-lg"
         />
       </div>
@@ -178,7 +189,6 @@ export default function PremiumTour({ onOpenLoginModal }) {
                         • {tour.duration || "0"} kun
                       </span>
                     </div>
-
                     <div className="flex items-center gap-3">
                       <PlaneIcon className="h-5 w-5 text-yellow-300" />
                       <span className="text-sm">
@@ -187,7 +197,6 @@ export default function PremiumTour({ onOpenLoginModal }) {
                           : "Noma'lum"}
                       </span>
                     </div>
-
                     <div className="flex items-center gap-3">
                       <UtensilsIcon className="h-5 w-5 text-yellow-300" />
                       <span className="text-sm">
@@ -196,7 +205,6 @@ export default function PremiumTour({ onOpenLoginModal }) {
                           : "Noma'lum"}
                       </span>
                     </div>
-
                     <div className="pt-4 border-t border-white/20">
                       {tour.hotels?.length > 0 ? (
                         tour.hotels.map((hotel) => (
@@ -260,7 +268,7 @@ export default function PremiumTour({ onOpenLoginModal }) {
       <AuthModal
         isOpen={isAuthModalOpen}
         onClose={closeAuthModal}
-        onOpenProfileModal={openProfileModal}
+        onOpenProfileModal={handleOpenLoginModal}
       />
 
       <BookingModal
@@ -268,6 +276,12 @@ export default function PremiumTour({ onOpenLoginModal }) {
         onClose={closeBookingModal}
         tourId={selectedTourId}
         actionType={actionType}
+      />
+
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={closeLoginModal}
+        onLoginSuccess={handleLoginSuccess}
       />
     </div>
   );

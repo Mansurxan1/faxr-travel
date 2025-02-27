@@ -5,7 +5,8 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Autoplay } from "swiper/modules"; 
+import { useTranslation } from "react-i18next";
+import { Navigation, Autoplay } from "swiper/modules";
 
 const partnerImages = [
   "https://static.tildacdn.com/tild3065-3431-4465-b165-326430373066/air-kazakhstan-25048.svg",
@@ -21,14 +22,15 @@ const partnerImages = [
 ];
 
 const Partners = () => {
+  const { t } = useTranslation();
   return (
     <div className="my-5">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-white text-center mb-8">
-          Bizning Hamkorlar
+          {t("partner")}
         </h2>
         <Swiper
-          modules={[Navigation, Autoplay]} 
+          modules={[Navigation, Autoplay]}
           spaceBetween={20}
           navigation
           loop={true}
@@ -37,8 +39,8 @@ const Partners = () => {
             dynamicBullets: true,
           }}
           autoplay={{
-            delay: 5000, 
-            disableOnInteraction: false, 
+            delay: 5000,
+            disableOnInteraction: false,
           }}
           breakpoints={{
             0: { slidesPerView: 2 },
