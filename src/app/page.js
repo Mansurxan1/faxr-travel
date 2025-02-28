@@ -5,7 +5,7 @@ import axios from "axios";
 import Navbar from "@/components/Navbar";
 import Banner from "@/components/Banner";
 import CompanyInfo from "@/components/ComponyInfo";
-import Footer from "./components/Footer";
+import Footer from "@/components/Footer";
 import Image from "next/image";
 
 export default function Home() {
@@ -47,7 +47,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#22C55E] via-green-600 to-teal-800 flex items-center justify-center">
         <div className="text-center">
-          <div className="relative w-40 h-40 mx-auto mb-6">
+          <div className="relative w-56 h-56 mx-auto mb-6">
             <Image
               src="/1.png"
               alt="Loading Logo"
@@ -56,7 +56,7 @@ export default function Home() {
             />
           </div>
 
-          <div className="relative w-64 h-4 bg-white/20 rounded-full overflow-hidden">
+          <div className="relative w-64 h-2 bg-white/20 rounded-full overflow-hidden">
             <div
               className="h-full bg-white transition-all duration-300 ease-out"
               style={{ width: `${percentage}%` }}

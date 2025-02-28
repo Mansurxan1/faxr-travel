@@ -4,29 +4,19 @@ import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ChevronDown, Menu, User, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import ProfileModal from "./ui/ProfileModal";
-import LoginModal from "./LoginModal";
+import { ChevronDown, Menu, X } from "lucide-react";
 
 const Navbar = () => {
   const { t, i18n } = useTranslation();
   const [lang, setLang] = useState("uz");
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
-  const router = useRouter();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
       const storedLang = localStorage.getItem("lang") || "uz";
-      const storedUser = localStorage.getItem("user");
       i18n.changeLanguage(storedLang);
       setLang(storedLang);
-      if (storedUser) setUser(JSON.parse(storedUser));
     }
   }, [i18n]);
 
@@ -39,10 +29,7 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      (isMenuOpen || isLoginModalOpen || isProfileOpen) &&
-      typeof window !== "undefined"
-    ) {
+    if (isMenuOpen && typeof window !== "undefined") {
       document.body.classList.add("overflow-hidden");
     } else if (typeof window !== "undefined") {
       document.body.classList.remove("overflow-hidden");
@@ -52,7 +39,7 @@ const Navbar = () => {
         document.body.classList.remove("overflow-hidden");
       }
     };
-  }, [isMenuOpen, isLoginModalOpen, isProfileOpen]);
+  }, [isMenuOpen]);
 
   const changeLanguage = (lng) => {
     i18n.changeLanguage(lng);
@@ -63,56 +50,6 @@ const Navbar = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
-    if (isLoginModalOpen || isProfileOpen) {
-      setIsLoginModalOpen(false);
-      setIsProfileOpen(false);
-    }
-  };
-
-  const openLoginModal = () => {
-    setIsLoginModalOpen(true);
-    setIsProfileOpen(false);
-    if (isMenuOpen) setIsMenuOpen(false);
-    document.body.classList.add("overflow-hidden");
-  };
-
-  const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
-    document.body.classList.remove("overflow-hidden");
-  };
-
-  const openProfileModal = () => {
-    setIsProfileOpen(true);
-    setIsLoginModalOpen(false);
-    if (isMenuOpen) setIsMenuOpen(false);
-    document.body.classList.add("overflow-hidden");
-  };
-
-  const closeProfileModal = () => {
-    setIsProfileOpen(false);
-    document.body.classList.remove("overflow-hidden");
-  };
-
-  const handleLoginSuccess = (userData) => {
-    setUser(userData);
-    closeLoginModal();
-    openProfileModal();
-  };
-
-  const handleProfileClick = () => {
-    if (user) {
-      openProfileModal();
-    } else {
-      openLoginModal();
-    }
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    setUser(null);
-    closeProfileModal();
-    router.push("/");
   };
 
   return (
@@ -127,9 +64,15 @@ const Navbar = () => {
             <Image
               src="/1.png"
               alt="FAXR TRAVEL Logo"
-              width={120}
-              height={80}
-              className="rounded-full transition-all duration-300 md:w-[200px] md:h-[170px]"
+              width={180}
+              height={100}
+              className="
+                rounded-full 
+                transition-all duration-300 
+                md:w-[200px] md:h-[220px] 
+                object-contain 
+                filter brightness-200 contrast-150 saturate-125
+              "
             />
           </Link>
           <div className="hidden lg:block">
@@ -172,6 +115,7 @@ const Navbar = () => {
                   <li
                     key={lng}
                     onClick={() => changeLanguage(lng)}
+                    onMouseEnter={() => changeLanguage(lng)} // Added hover functionality
                     className="p-2 text-green-600 rounded-lg hover:bg-green-500 hover:text-white cursor-pointer text-center"
                   >
                     {lng.toUpperCase()}
@@ -180,21 +124,6 @@ const Navbar = () => {
               </ul>
             </div>
 
-            <div className="flex items-center">
-              <button
-                onClick={handleProfileClick}
-                className={`flex items-center gap-1 md:gap-2 px-2 md:px-3 py-1 md:py-2 rounded-md text-sm font-medium transition duration-150 ease-in-out ${
-                  isScrolled
-                    ? "text-white hover:text-black hover:bg-white/20"
-                    : "text-white hover:text-black hover:bg-white/10"
-                }`}
-              >
-                <User className="w-4 h-4 md:w-5 md:h-5" />
-                <span className="hidden md:inline">
-                  {user ? t("profile") : t("login")}
-                </span>
-              </button>
-            </div>
             <div className="lg:hidden">
               <button
                 onClick={toggleMenu}
@@ -236,22 +165,6 @@ const Navbar = () => {
           </div>
         </div>
       </div>
-
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={closeLoginModal}
-        onLoginSuccess={handleLoginSuccess}
-      />
-
-      <AnimatePresence>
-        {isProfileOpen && user && (
-          <ProfileModal
-            user={user}
-            onClose={closeProfileModal}
-            onLogout={handleLogout}
-          />
-        )}
-      </AnimatePresence>
     </nav>
   );
 };

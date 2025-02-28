@@ -33,6 +33,14 @@ const Banner = () => {
           : lang === "ru"
           ? slide.descRu
           : slide.descEng,
+      hotelName: slide.hotels
+        ? lang === "uz"
+          ? slide.hotels[0].nameUz 
+          : lang === "ru"
+          ? slide.hotels[0].nameRu
+          : slide.hotels[0].nameEng
+        : "",
+      hotelPrice: slide.hotels ? slide.hotels[0].price : "",
     };
   };
 
@@ -74,8 +82,8 @@ const Banner = () => {
                 </p>
                 {slide.price && slide.day && (
                   <div className="mb-2">
-                    <span className="bg-green-600 py-3 px-8 rounded-full text-white ">
-                      {slide.price} $
+                    <span className="bg-green-600 py-3 px-8 rounded-full text-white">
+                      {slide.price} {t("sum")}
                     </span>
                   </div>
                 )}

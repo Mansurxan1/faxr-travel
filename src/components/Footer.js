@@ -39,7 +39,10 @@ export default function Footer() {
                 alt="Faxr Travel"
                 width={80}
                 height={64}
-                className="w-auto h-12 sm:h-16 mx-auto"
+                className="
+                  w-auto h-12 sm:h-16 mx-auto 
+                  filter brightness-150 contrast-110
+                "
                 priority
               />
             </Link>
@@ -157,7 +160,7 @@ export default function Footer() {
           transition={{ delay: 0.5, duration: 0.6 }}
         >
           <p className="text-white">
-            © {new Date().getFullYear()} Faxr-Travel.uz {t("footer.rights")}
+            © {new Date().getFullYear()} Faxr-Travel.uz {t("footer.copyright")}
           </p>
         </motion.div>
       </div>
