@@ -8,7 +8,7 @@ import "swiper/css/autoplay";
 import useHomeStore from "@s/store/homeStore";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-
+ 
 const Banner = () => {
   const slides = useHomeStore((state) => state.slides);
   const { t, i18n } = useTranslation();
