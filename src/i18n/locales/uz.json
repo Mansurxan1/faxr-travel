@@ -5,7 +5,7 @@
   "contact": "Bog'lanish",
   "company_name": "FAXR TRAVEL",
   "company_type": "Mas'uliyati Cheklangan Jamiyat",
-  "about_text": "FAXR TRAVEL MCHJ – Oʻzbekistondagi yetakchi sayohat agentliklaridan biri bo‘lib, biz mijozlarimizga unutilmas sayohat tajribalarini taqdim etamiz. Dunyoning eng go‘zal maskanlariga tashrif buyurish, yangi madaniyatlar bilan tanishish va orzularingizni ro‘yobga chiqarish imkoniyatini yaratamiz. Bizning tajribali jamoamiz sizning sayohatingizni maksimal darajada qulay, xavfsiz va esda qolarli qilish uchun doimo tayyor. FAXR TRAVEL bilan dunyoni kashf eting va har bir sayohatni unutilmas lahzaga aylantiring!",
+  "about_text": "FAXR TRAVEL MCHJ – Oʻzbekistondagi yetakchi sayohat agentliklaridan biri bo'lib, biz mijozlarimizga unutilmas sayohat tajribalarini taqdim etamiz. Dunyoning eng go'zal maskanlariga tashrif buyurish, yangi madaniyatlar bilan tanishish va orzularingizni ro'yobga chiqarish imkoniyatini yaratamiz. Bizning tajribali jamoamiz sizning sayohatingizni maksimal darajada qulay, xavfsiz va esda qolarli qilish uchun doimo tayyor. FAXR TRAVEL bilan dunyoni kashf eting va har bir sayohatni unutilmas lahzaga aylantiring!",
   "tour_package_title": "Bizning Xizmatlar",
   "partner": "Bizning Hamkorlar",
   "read_more": "Batafsil",
@@ -33,7 +33,17 @@
   "hotels": "Mehmonhonalar",
   "sum": "so'm",
   "day": "kunlik",
-  "back": "Ortga qaytish",
+  "back": "Orqaga",
+  "your_name": "Ismingiz",
+  "your_phone": "Telefon raqamingiz",
+  "name_placeholder": "To'liq ismingizni kiriting",
+  "please_enter_name": "Iltimos, ismingizni kiriting",
+  "please_enter_phone": "Iltimos, telefon raqamingizni kiriting",
+  "payment_error": "To'lovni amalga oshirishda xatolik yuz berdi",
+  "payment_details": "To'lov tafsilotlari",
+  "tour": "Sayohat",
+  "proceed_to_payment": "To'lovga o'tish",
+  "cancel": "Bekor qilish",
   "banner": {
     "explore": "Sotib Olish",
     "discover": "Ajoyib Joylarni Kashf Etish",
@@ -87,5 +97,10 @@
       "agreement": "Mijoz maxfiylik shartnomasi",
       "social": "Ijtimoiy tarmoqlar",
       "copyright": "Barcha huquqlar himoyalangan."
-  }
+  },
+  "processing": "Jarayonda...",
+  "payment_success": "To'lov muvaffaqiyatli yakunlandi!",
+  "payment_success_message": "Sizning to'lovingiz muvaffaqiyatli amalga oshirildi. Xarid uchun rahmat! Siz ko'rsatilgan emailga tasdiqlash xabarini olasiz.",
+  "back_to_home": "Bosh sahifaga qaytish",
+  "not_found": "Ma'lumot topilmadi"
 }

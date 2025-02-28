@@ -1,14 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import useHomeStore from "@s/store/homeStore";
 import { useTranslation } from "react-i18next";
+import PaymentForm from "./PaymentForm";
 
 const TourDetails = ({ id, onClose }) => {
   const { slides } = useHomeStore();
   const { t, i18n } = useTranslation();
   const lang = i18n.language || "uz"; // Consistent with Banner
   const slide = slides.find((s) => s.id === id);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [showPaymentForm, setShowPaymentForm] = useState(false);
 
   if (!slide) {
     return (
@@ -57,8 +61,68 @@ const TourDetails = ({ id, onClose }) => {
   const { title, desc, visa, hotels, priceIncludes, additionalPayments } =
     getSlideText();
 
-  const handleBuyNow = () => {
-    console.log(`Buying tour with ID: ${id}`);
+  const handleBuyClick = () => {
+    setShowPaymentForm(true);
+  };
+
+  const handleCancelPayment = () => {
+    setShowPaymentForm(false);
+  };
+
+  const handleSubmitPayment = async (userData) => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      // Подготавливаем данные для отправки
+      const paymentData = {
+        tourId: id,
+        tourName: title,
+        price: slide.price,
+        userId: null,
+        userName: userData.name,
+        userPhone: userData.phone
+      };
+      
+      console.log('Отправка запроса на оплату:', paymentData);
+      
+      // Отправляем запрос на создание платежа
+      const response = await fetch('/api/click', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(paymentData),
+      });
+      
+      const data = await response.json();
+      console.log('Ответ от сервера:', data);
+      
+      if (!response.ok) {
+        throw new Error(data.error || 'Ошибка при создании платежа');
+      }
+      
+      if (!data.redirectUrl) {
+        throw new Error('Не получен URL для перенаправления на страницу оплаты');
+      }
+      
+      // Перенаправляем пользователя на страницу оплаты Click
+      window.location.href = data.redirectUrl;
+    } catch (error) {
+      console.error('Ошибка при оплате:', error);
+      
+      // Более информативное сообщение об ошибке
+      let errorMessage = 'Произошла ошибка при обработке платежа. Пожалуйста, попробуйте позже.';
+      
+      if (error.message.includes('Сессия заблокирована')) {
+        errorMessage = 'Сессия оплаты заблокирована. Пожалуйста, обновите страницу и попробуйте снова.';
+      } else if (error.message.includes('авторизоваться')) {
+        errorMessage = 'Требуется авторизация в системе оплаты. Пожалуйста, попробуйте снова.';
+      }
+      
+      setError(errorMessage);
+      setLoading(false);
+    }
   };
 
   return (
@@ -146,20 +210,51 @@ const TourDetails = ({ id, onClose }) => {
           </ul>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-6 mt-12 max-w-2xl mx-auto">
-          <button
-            onClick={onClose}
-            className="w-full bg-white text-green-700 border-2 border-green-700 py-4 rounded-xl hover:bg-green-50 hover:shadow-lg transition-all duration-300 font-semibold text-lg shadow-md"
-          >
-            {t("back")}
-          </button>
-          <button
-            onClick={handleBuyNow}
-            className="w-full bg-gradient-to-r from-green-600 to-green-800 text-white py-4 rounded-xl hover:from-green-700 hover:to-green-900 hover:shadow-lg transition-all duration-300 font-semibold text-lg shadow-md"
-          >
-            {t("purchase")}
-          </button>
-        </div>
+        {showPaymentForm ? (
+          <PaymentForm 
+            onSubmit={handleSubmitPayment}
+            onCancel={handleCancelPayment}
+            price={slide.price}
+            tourName={title}
+          />
+        ) : (
+          <>
+            {error && (
+              <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-6">
+                <p>{error}</p>
+              </div>
+            )}
+
+            <div className="flex flex-col sm:flex-row gap-6 mt-12 max-w-2xl mx-auto">
+              <button
+                onClick={onClose}
+                className="w-full bg-white text-green-700 border-2 border-green-700 py-4 rounded-xl hover:bg-green-50 hover:shadow-lg transition-all duration-300 font-semibold text-lg shadow-md"
+                disabled={loading}
+              >
+                {t("back")}
+              </button>
+              <button
+                onClick={handleBuyClick}
+                className={`w-full bg-gradient-to-r from-green-600 to-green-800 text-white py-4 rounded-xl hover:from-green-700 hover:to-green-900 hover:shadow-lg transition-all duration-300 font-semibold text-lg shadow-md ${
+                  loading ? 'opacity-70 cursor-not-allowed' : ''
+                }`}
+                disabled={loading}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    {t("processing")}
+                  </span>
+                ) : (
+                  t("purchase")
+                )}
+              </button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

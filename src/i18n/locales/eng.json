@@ -40,7 +40,21 @@
   "day": "day",
   "read_more": "More details",
   "sum": "sum",
-  "back": "Go back",
+  "back": "Back",
+  "processing": "Processing...",
+  "payment_success": "Payment Successful!",
+  "payment_success_message": "Your payment has been successfully processed. Thank you for your purchase! You will receive a confirmation to your email.",
+  "back_to_home": "Back to Home",
+  "not_found": "Information not found",
+  "your_name": "Your Name",
+  "your_phone": "Your Phone",
+  "name_placeholder": "Enter your full name",
+  "please_enter_name": "Please enter your name",
+  "please_enter_phone": "Please enter your phone number",
+  "payment_error": "Error processing payment",
+  "payment_details": "Payment Details",
+  "tour": "Tour",
+  "proceed_to_payment": "Proceed to Payment",
   "banner": {
     "explore": "Explore",
     "discover": "Discover Amazing Places",
@@ -93,5 +107,4 @@
     "social": "Social Media",
     "copyright": "All rights reserved."
   }
-
 }
