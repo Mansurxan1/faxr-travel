@@ -295,6 +295,39 @@ export async function fiscalizeReceipt(paymentData) {
     console.log('Ответ от API фискализации:', responseData);
     
     if (response.ok && responseData.error === 0) {
+      // Если фискализация прошла успешно, отправляем данные о товарах и услугах
+      const submitItemsResult = await submitFiscalItems({
+        serviceId,
+        paymentId: responseData.payment_id || orderId,
+        tourName,
+        price,
+        spicCode,
+        packageCode
+      });
+      
+      if (submitItemsResult.success) {
+        // Получаем фискальные данные (ссылку на чек)
+        const fiscalDataResult = await getFiscalData({
+          serviceId,
+          paymentId: responseData.payment_id || orderId,
+          merchantId,
+          merchantUserId,
+          secretKey
+        });
+        
+        if (fiscalDataResult.success && fiscalDataResult.qrCodeURL) {
+          // Отправляем фискализированный чек
+          await submitFiscalQRCode({
+            serviceId,
+            paymentId: responseData.payment_id || orderId,
+            qrcode: fiscalDataResult.qrCodeURL,
+            merchantId,
+            merchantUserId,
+            secretKey
+          });
+        }
+      }
+      
       return { 
         success: true, 
         fiscalData: responseData 
@@ -308,6 +341,210 @@ export async function fiscalizeReceipt(paymentData) {
     }
   } catch (error) {
     console.error('Ошибка при фискализации чека:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
+}
+
+// Функция для отправки данных о товарах и услугах
+async function submitFiscalItems(data) {
+  try {
+    const { 
+      serviceId, 
+      paymentId, 
+      tourName, 
+      price, 
+      spicCode, 
+      packageCode 
+    } = data;
+    
+    // Получаем данные из переменных окружения
+    const merchantId = process.env.CLICK_MERCHANT_ID;
+    const merchantUserId = process.env.CLICK_MERCHANT_USER_ID;
+    const secretKey = process.env.CLICK_SECRET_KEY;
+    
+    // Формируем подпись для запроса
+    const signTime = Date.now();
+    const signString = `${merchantId}${signTime}${secretKey}`;
+    const sign = crypto.createHash('md5').update(signString).digest('hex');
+    
+    // Преобразуем цену в тийины (1 сум = 100 тийин)
+    const priceInTiyin = Math.round(parseFloat(price) * 100);
+    
+    // Рассчитываем НДС (15%)
+    const vatPercent = 15;
+    const vatAmount = Math.round(priceInTiyin * vatPercent / 100);
+    
+    // Формируем данные для запроса
+    const requestData = {
+      service_id: parseInt(serviceId),
+      payment_id: paymentId,
+      items: [
+        {
+          Name: tourName,
+          SPIC: spicCode,
+          PackageCode: packageCode,
+          Price: priceInTiyin,
+          Amount: 1,
+          VAT: vatAmount,
+          VATPercent: vatPercent,
+          CommissionInfo: {}
+        }
+      ],
+      received_ecash: 0,
+      received_cash: 0,
+      received_card: priceInTiyin // Оплата картой
+    };
+    
+    console.log('Отправка данных о товарах и услугах:', requestData);
+    
+    // Отправляем запрос
+    const response = await fetch('https://api.click.uz/v2/merchant/payment/ofd_data/submit_items', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Auth': `${merchantId}:${sign}:${signTime}`
+      },
+      body: JSON.stringify(requestData)
+    });
+    
+    const responseData = await response.json();
+    
+    console.log('Ответ от API отправки данных о товарах и услугах:', responseData);
+    
+    if (response.ok && responseData.error_code === 0) {
+      return { 
+        success: true, 
+        data: responseData 
+      };
+    } else {
+      console.error('Ошибка при отправке данных о товарах и услугах:', responseData);
+      return { 
+        success: false, 
+        error: responseData.error_note || 'Ошибка при отправке данных о товарах и услугах' 
+      };
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке данных о товарах и услугах:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
+}
+
+// Функция для получения фискальных данных (ссылки на чек)
+async function getFiscalData(data) {
+  try {
+    const { 
+      serviceId, 
+      paymentId, 
+      merchantId, 
+      merchantUserId, 
+      secretKey 
+    } = data;
+    
+    // Формируем подпись для запроса
+    const signTime = Date.now();
+    const signString = `${merchantId}${signTime}${secretKey}`;
+    const sign = crypto.createHash('md5').update(signString).digest('hex');
+    
+    console.log('Получение фискальных данных для платежа:', paymentId);
+    
+    // Отправляем запрос
+    const response = await fetch(`https://api.click.uz/v2/merchant/payment/ofd_data/${serviceId}/${paymentId}`, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Auth': `${merchantId}:${sign}:${signTime}`
+      }
+    });
+    
+    const responseData = await response.json();
+    
+    console.log('Ответ от API получения фискальных данных:', responseData);
+    
+    if (response.ok && responseData.paymentId) {
+      return { 
+        success: true, 
+        paymentId: responseData.paymentId,
+        qrCodeURL: responseData.qrCodeURL
+      };
+    } else {
+      console.error('Ошибка при получении фискальных данных:', responseData);
+      return { 
+        success: false, 
+        error: responseData.error_note || 'Ошибка при получении фискальных данных' 
+      };
+    }
+  } catch (error) {
+    console.error('Ошибка при получении фискальных данных:', error);
+    return { 
+      success: false, 
+      error: error.message 
+    };
+  }
+}
+
+// Функция для отправки фискализированного чека
+async function submitFiscalQRCode(data) {
+  try {
+    const { 
+      serviceId, 
+      paymentId, 
+      qrcode, 
+      merchantId, 
+      merchantUserId, 
+      secretKey 
+    } = data;
+    
+    // Формируем подпись для запроса
+    const signTime = Date.now();
+    const signString = `${merchantId}${signTime}${secretKey}`;
+    const sign = crypto.createHash('md5').update(signString).digest('hex');
+    
+    // Формируем данные для запроса
+    const requestData = {
+      service_id: parseInt(serviceId),
+      payment_id: paymentId,
+      qrcode: qrcode
+    };
+    
+    console.log('Отправка фискализированного чека:', requestData);
+    
+    // Отправляем запрос
+    const response = await fetch('https://api.click.uz/v2/merchant/payment/ofd_data/submit_qrcode', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Auth': `${merchantId}:${sign}:${signTime}`
+      },
+      body: JSON.stringify(requestData)
+    });
+    
+    const responseData = await response.json();
+    
+    console.log('Ответ от API отправки фискализированного чека:', responseData);
+    
+    if (response.ok && responseData.error_code === 0) {
+      return { 
+        success: true, 
+        data: responseData 
+      };
+    } else {
+      console.error('Ошибка при отправке фискализированного чека:', responseData);
+      return { 
+        success: false, 
+        error: responseData.error_note || 'Ошибка при отправке фискализированного чека' 
+      };
+    }
+  } catch (error) {
+    console.error('Ошибка при отправке фискализированного чека:', error);
     return { 
       success: false, 
       error: error.message 
