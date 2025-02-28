@@ -16,14 +16,36 @@ export default function Home() {
   useEffect(() => {
     const fetchTours = async () => {
       try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/tours`
-        );
-        setTours(response.data.data);
+        // Используем локальные данные вместо запроса к API
+        const mockTours = [
+          {
+            id: 1,
+            title: "Тур в Самарканд",
+            description: "Исторический тур по древнему городу",
+            price: "1000000",
+            image: "/tours/samarkand.jpg"
+          },
+          {
+            id: 2,
+            title: "Тур в Бухару",
+            description: "Путешествие в сердце Шелкового пути",
+            price: "1200000",
+            image: "/tours/bukhara.jpg"
+          },
+          {
+            id: 3,
+            title: "Тур в Хиву",
+            description: "Открытие древнего города-музея",
+            price: "900000",
+            image: "/tours/khiva.jpg"
+          }
+        ];
+        
+        setTours({ data: mockTours });
         setPercentage(100);
         setTimeout(() => setIsLoading(false), 500);
       } catch (error) {
-        console.error("Error fetching tours:", error);
+        console.error("Error loading tours:", error);
         setPercentage(99);
       }
     };

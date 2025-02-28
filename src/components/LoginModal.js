@@ -22,25 +22,17 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
-        { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      const { user, token } = response.data;
+      // Имитация успешного входа без обращения к внешнему API
+      const user = { id: 1, email };
+      const token = "dummy_token_for_local_auth";
+      
       Cookies.set("token", token, { expires: 7, secure: true });
       setUser(user, token);
       console.log("User logged in:", { user, token });
       onLoginSuccess(user);
       onClose();
     } catch (error) {
-      setError(
-        error.response?.data.message || "An error occurred during login."
-      );
+      setError("Произошла ошибка при входе в систему.");
     }
   };
 
@@ -49,29 +41,18 @@ const LoginModal = ({ isOpen, onClose, onLoginSuccess }) => {
     setError(null);
 
     try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/auth/register`,
-        { email, password },
-        {
-          headers: { "Content-Type": "application/json" },
-          withCredentials: true,
-        }
-      );
-
-      const { user, token } = response.data;
+      // Имитация успешной регистрации без обращения к внешнему API
+      const user = { id: 1, email };
+      const token = "dummy_token_for_local_auth";
+      
       Cookies.set("token", token, { expires: 7, secure: true });
       setUser(user, token);
       console.log("User registered:", { user, token });
-      alert("Registration successful!");
+      alert("Регистрация успешна!");
       onLoginSuccess(user);
       onClose();
     } catch (error) {
-      setError(
-        error.response?.status === 409
-          ? "You are already registered!"
-          : error.response?.data.message ||
-              "An error occurred during registration."
-      );
+      setError("Произошла ошибка при регистрации.");
     }
   };
 
