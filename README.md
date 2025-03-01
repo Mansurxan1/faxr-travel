@@ -1,36 +1,127 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# FaxrTravel - Туристическое приложение
 
-## Getting Started
+Веб-приложение для бронирования туров с интеграцией платежной системы Click.
 
-First, run the development server:
+## Особенности
 
+- Каталог туров с подробным описанием
+- Интеграция с платежной системой Click
+- Многоязычный интерфейс (русский, узбекский, английский)
+- Адаптивный дизайн для мобильных устройств
+- Уведомления в Telegram о новых заказах
+
+## Технологии
+
+- Next.js 15
+- React 19
+- Tailwind CSS
+- Zustand для управления состоянием
+- Интеграция с Click Payment API
+- Vercel KV Storage для хранения данных
+
+## Локальная разработка
+
+1. Клонируйте репозиторий:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yourusername/faxrtravel.git
+cd faxrtravel
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Установите зависимости:
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+3. Создайте файл `.env.local` и добавьте необходимые переменные окружения:
+```
+# Click Payment Integration
+CLICK_SECRET_KEY=your_secret_key
+CLICK_SERVICE_ID=your_service_id
+CLICK_MERCHANT_ID=your_merchant_id
+CLICK_MERCHANT_USER_ID=your_merchant_user_id
+CLICK_SPIC_CODE=your_spic_code
+CLICK_PACKAGE_CODE=your_package_code
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Telegram Bot
+TELEGRAM_BOT_TOKEN=your_bot_token
+TELEGRAM_CHAT_ID=your_chat_id
+```
 
-## Learn More
+4. Запустите приложение в режиме разработки:
+```bash
+npm run dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Деплой на Vercel
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Предварительные требования
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. Аккаунт на [Vercel](https://vercel.com)
+2. Установленный [Vercel CLI](https://vercel.com/cli)
+3. Настроенный проект на GitHub/GitLab/Bitbucket
 
-## Deploy on Vercel
+### Шаги для деплоя
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. Залогиньтесь в Vercel CLI:
+```bash
+vercel login
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+2. Настройте Vercel KV Storage:
+   - Перейдите в [Vercel Dashboard](https://vercel.com/dashboard)
+   - Выберите ваш проект
+   - Перейдите в раздел Storage
+   - Создайте новую KV базу данных
+   - Скопируйте переменные окружения KV_URL, KV_REST_API_URL, KV_REST_API_TOKEN, KV_REST_API_READ_ONLY_TOKEN
+
+3. Добавьте переменные окружения в проект:
+   - В Vercel Dashboard перейдите в Settings > Environment Variables
+   - Добавьте все переменные из файла `.env.local`
+   - Добавьте переменные KV Storage
+
+4. Деплой проекта:
+```bash
+vercel
+```
+
+5. Для продакшен-деплоя:
+```bash
+vercel --prod
+```
+
+## Тестирование Click Payment
+
+Для тестирования интеграции с Click Payment:
+
+1. Создайте тестовый заказ через API:
+```bash
+curl -X POST https://your-vercel-app.vercel.app/api/click \
+  -H "Content-Type: application/json" \
+  -d '{
+    "tourId": "test-123",
+    "tourName": "Тестовый тур",
+    "price": "10000",
+    "userName": "Тест Тестов",
+    "userPhone": "+998901234567"
+  }'
+```
+
+2. Используйте полученный `orderId` для тестирования уведомлений:
+```bash
+curl -X POST https://your-vercel-app.vercel.app/api/click/notify \
+  -H "Content-Type: application/json" \
+  -d '{
+    "click_trans_id": "test-123456",
+    "service_id": 68027,
+    "merchant_trans_id": "YOUR_ORDER_ID",
+    "amount": 10000,
+    "action": 1,
+    "sign_time": "1740827772",
+    "sign_string": "YOUR_SIGN_STRING",
+    "error": 0
+  }'
+```
+
+## Лицензия
+
+MIT
